@@ -30,8 +30,10 @@ namespace Enable
 {
   bool OVERLAPCHECK = false;
   bool ABSORBER = false;
+  bool LIGHTPROPAGATION = false;
   bool DSTOUT = false;
   bool DSTOUT_COMPRESS = false;
+  bool AI_TRACKINGGEO = true;
   int VERBOSITY = 0;
 
   // IP selection require explicit choice in the main macros
@@ -67,6 +69,10 @@ namespace TRACKING
   PHG4TrackFastSim * FastKalmanFilterSiliconTrack(nullptr);
 
   PHG4TrackFastSim * FastKalmanFilterInnerTrack(nullptr);
+
+  PHG4TrackFastSim * FastKalmanFilterTTLonly(nullptr);
+
+  PHG4TrackFastSim * FastKalmanFilterDefaultECCE(nullptr);
 
   std::set<std::string> ProjectionNames;
 }

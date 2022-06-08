@@ -39,7 +39,7 @@ namespace G4TTL
   double xoffsetFTTLIP8[3]      = { 8.4, 8.4, 8.4};
   namespace SETTING
   {
-    bool optionCEMC  = false;
+    bool optionCEMC  = true;
     bool optionEEMCH = true;
     bool optionBasicGeo    = false;
     int optionDR    = 0;
@@ -120,6 +120,7 @@ void TTL_Init()
     cout << "TTL one forward disk in front of dRICH and one backward disk in front of EEMC, barrel CTTL center at radius 64cm" << endl;
     // single disk in front of dRICH (full eta)
     G4TTL::layer[2]            = 1;
+    G4TTL::maxExtension[0][0] = 64;
     G4TTL::minExtension[2][0] = 7.0;
     G4TTL::maxExtension[2][0] = 87;
     G4TTL::positionToVtx[2][0] = 182.;
@@ -136,12 +137,54 @@ void TTL_Init()
 
     // barrel layer at 64cm
     G4TTL::positionToVtx[1][0] = 64.;
-    G4TTL::minExtension[1][0] = 140;
-    G4TTL::maxExtension[1][0] = 0;
+    G4TTL::minExtension[1][0] = 142;
+    G4TTL::maxExtension[1][0] = -5;
   }
   if(G4TTL::SETTING::optionGeo == 8){
-    cout << "TTL forward disk 1 reduced in radius to 60cm" << endl;
-    G4TTL::maxExtension[2][0] = 60.;
+    G4TTL::maxExtension[0][0] = 64;
+    G4TTL::layer[2]            = 3;
+    cout << "TTL forward disk 1 in front of dRICH" << endl;
+    G4TTL::minExtension[2][0] = 7.0;
+    G4TTL::maxExtension[2][0] = 87;
+    G4TTL::positionToVtx[2][0] = 182.;
+    cout << "additional two small TTL disks in front of FEMC" << endl;
+    G4TTL::minExtension[2][1] = 11.62;
+    G4TTL::minExtension[2][2] = 11.7;
+    G4TTL::maxExtension[2][1] = 60.;
+    G4TTL::maxExtension[2][2] = 60.;
+    G4TTL::positionToVtx[2][1] = 287.;
+    G4TTL::positionToVtx[2][2] = 289.;
+
+    G4TTL::layer[0]            = 1;
+
+    G4TTL::positionToVtx[1][0] = 64.;
+    G4TTL::minExtension[1][0] = 142;
+    G4TTL::maxExtension[1][0] = -5;
+  }
+
+  if(G4TTL::SETTING::optionGeo == 9){
+    cout << "TTL one forward disk in front of dRICH and two backward disks ( one in front of EEMC and one behind EEMC), barrel CTTL center at radius 64cm" << endl;
+    // single disk in front of dRICH (full eta)
+    G4TTL::layer[2]            = 1;
+    G4TTL::minExtension[2][0] = 7.0;
+    G4TTL::maxExtension[2][0] = 87;
+    G4TTL::positionToVtx[2][0] = 182.;
+    G4TTL::xoffsetFTTLIP6[0] = -2.7;
+    G4TTL::xoffsetFTTLIP8[0] = 3.0;
+
+    // single disk in front of EEMC
+    G4TTL::layer[0]            = 2;
+    G4TTL::maxExtension[0][0] = 64; // layer in front of EEMC
+    G4TTL::minExtension[0][1] = 8.0;
+    G4TTL::maxExtension[0][1] = 64; // layer behind EEMC
+    G4TTL::positionToVtx[0][1] = -225.;
+    // G4TTL::xoffsetFTTLIP6[0] = -2.7;
+    // G4TTL::xoffsetFTTLIP8[0] = 3.0;
+
+    // barrel layer at 64cm
+    G4TTL::positionToVtx[1][0] = 64.;
+    G4TTL::minExtension[1][0] = 142;
+    G4TTL::maxExtension[1][0] = -5;
   }
 
   if (G4TTL::SETTING::optionDR == 2 && G4TTL::SETTING::optionGeo == 4 ){

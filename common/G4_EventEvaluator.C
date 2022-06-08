@@ -13,12 +13,16 @@ namespace Enable
   bool EVENT_EVAL = false;
   bool EVENT_EVAL_DO_HEPMC = false;
   bool EVENT_EVAL_DO_EVT_LVL = false;
+  bool EVENT_EVAL_DO_HITS_ABSORBER = false;
+  bool EVENT_EVAL_DO_HITS_CALO = false;
+  bool EVENT_EVAL_DO_HITS_BLACKHOLE = false;
 }  // namespace Enable
 
 namespace EVENT_EVALUATOR
 {
   int Verbosity = 0;
   float EnergyThreshold = 0.05;
+  int MCStackDepth = 0;
 }  // namespace EVENT_EVALUATOR
 
 void Event_Eval(const std::string &filename)
@@ -33,6 +37,16 @@ void Event_Eval(const std::string &filename)
   {
     eval->set_do_TRACKS(true);
     eval->set_do_HITS(true);
+    std::cout << "Enabled hits in event eval.\n";
+    if (Enable::EVENT_EVAL_DO_HITS_ABSORBER) {
+      std::cout << "Enabled absorber hits in event eval.\n";
+      eval->set_do_HITS_ABSORBER(true);
+    }
+    if (Enable::EVENT_EVAL_DO_HITS_CALO) {
+      std::cout << "Enabled calorimeter hits in event eval.\n";
+      eval->set_do_HITS_CALO(true);
+      if (Enable::BLACKHOLE_SAVEHITS && Enable::EVENT_EVAL_DO_HITS_BLACKHOLE) eval->set_do_BLACKHOLE(true);
+    }
     eval->set_do_PROJECTIONS(true);
     if (G4TRACKING::DISPLACED_VERTEX)
       eval->set_do_VERTEX(true);
@@ -41,17 +55,20 @@ void Event_Eval(const std::string &filename)
   }
   if (Enable::CEMC_CLUSTER) eval->set_do_CEMC(true);
   if (Enable::EEMC_CLUSTER || Enable::EEMCH_CLUSTER) eval->set_do_EEMC(true);
-  if (Enable::FEMC_CLUSTER) eval->set_do_FEMC(true);
-  if (Enable::HCALIN_CLUSTER) eval->set_do_HCALIN(true);
-  if (Enable::HCALOUT_CLUSTER) eval->set_do_HCALOUT(true);
-  if (Enable::FHCAL_CLUSTER) eval->set_do_FHCAL(true);
-  if (Enable::FHCAL_CLUSTER || Enable::FEMC_CLUSTER || Enable::EEMC_CLUSTER) eval->set_do_CLUSTERS(true);
-  if (Enable::DRCALO_CLUSTER) eval->set_do_DRCALO(true);
-  if (Enable::LFHCAL_CLUSTER) eval->set_do_LFHCAL(true);
-  if (Enable::BECAL) eval->set_do_BECAL(true);
+  if (Enable::EEMCH && G4EEMCH::SETTING::USEHYBRID) eval->set_do_EEMCG(true);
+  if (Enable::FEMC) eval->set_do_FEMC(true);
   if (Enable::EHCAL) eval->set_do_EHCAL(true);
+  if (Enable::HCALIN) eval->set_do_HCALIN(true);
+  if (Enable::HCALOUT) eval->set_do_HCALOUT(true);
+  if (Enable::FHCAL) eval->set_do_FHCAL(true);
+  if (Enable::FHCAL_CLUSTER || Enable::FEMC_CLUSTER || Enable::EEMC_CLUSTER) eval->set_do_CLUSTERS(true);
+  if (Enable::DRCALO) eval->set_do_DRCALO(true);
+  if (Enable::LFHCAL) eval->set_do_LFHCAL(true);
+  if (Enable::BECAL) eval->set_do_BECAL(true);
 
   eval->set_do_MCPARTICLES(true);
+  eval->set_do_GEOMETRY(true);
+  eval->set_depth_MCstack(EVENT_EVALUATOR::MCStackDepth);
   eval->set_do_HEPMC(Enable::EVENT_EVAL_DO_HEPMC);
   eval->set_do_store_event_level_info(Enable::EVENT_EVAL_DO_EVT_LVL);
   se->registerSubsystem(eval);
